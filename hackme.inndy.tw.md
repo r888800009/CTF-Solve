@@ -62,3 +62,6 @@
 ## 84 cipher 1
   using online substitution cipher solver, and fixing result
 
+## 85 cipher 2
+  using online vigenere cipher solver, then view the description about the flag 
+
