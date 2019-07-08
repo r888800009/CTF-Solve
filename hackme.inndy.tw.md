@@ -34,6 +34,13 @@
   ```
   then find `main` label, then find `cmp` instruction
 
+## 42 simple
+  ``` bash 
+    strings ./simple-rev|less
+  ```
+  found a caesar cipher and decode
+
+
 ## 57 catflag
   connect to server then type
   ``` bash
