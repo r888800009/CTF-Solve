@@ -1,8 +1,7 @@
 # hackme.inndy.tw Solve
 ## 2
-  ``` bash
-    stegsolve corgi-can-fly.png
-  ```
+ using `stegsolve` open `corgi-can-fly.png`
+ 
 
 ## 3
   ``` bash
