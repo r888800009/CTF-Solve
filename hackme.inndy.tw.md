@@ -59,3 +59,6 @@
     base64.b32decode(base64.b85decode("Nm@rmLsBy{Nm5u-K{iZKPgPMzS2I*lPc%_SMOjQ#O;uV{MM*?PPFhk|Hd;hVPFhq{HaAH<"))
   ```
 
+## 84 cipher 1
+  using online substitution cipher solver, and fixing result
+
