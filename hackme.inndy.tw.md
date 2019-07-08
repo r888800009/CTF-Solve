@@ -15,6 +15,9 @@
 
 ## 15
   search `FLAG{` on index page
+  
+## 18 homepage
+  `f12`->`console`
 
 ## 19 ping (os command injectio)
   `$(tail *)`
