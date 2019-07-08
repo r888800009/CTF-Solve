@@ -16,6 +16,9 @@
 ## 15
   search `FLAG{` on index page
 
+## 19 ping (os command injectio)
+  `$(tail *)`
+
 ## 21 SQL Injection
   user: `admin`, password:``\' or `user`= "admin" #``
 
