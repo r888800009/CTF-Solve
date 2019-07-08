@@ -65,3 +65,8 @@
 ## 85 cipher 2
   using online vigenere cipher solver, then view the description about the flag 
 
+## 97 fast
+  You need the int32 overflow, and you need `coproc`, 
+  and you can't use `bc` and the buffer, Otherwise, 
+  you will waste your time, to write the useless script
+
