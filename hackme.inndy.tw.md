@@ -36,6 +36,9 @@
 ## 19 ping (os command injectio)
   `$(tail *)`
 
+## 20 scoreboard
+  http header
+
 ## 21 SQL Injection
   user: `admin`, password:``\' or `user`= "admin" #``
 
