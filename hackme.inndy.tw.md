@@ -64,6 +64,14 @@
     cat flag
   ```
 
+## 58 
+  find the address of `<call_me_maybe>` is `0x080485fb`
+
+  find the return address location `ebp + 4`(14) is 10 (array) + 3 (local
+  variable) `integers`  look from the array
+
+  theb use `edit number` then type `14`, `134514171` (0x080485fb) get the shell
+
 ## 81 easy
   hex and base64
 
