@@ -72,6 +72,9 @@
 
   theb use `edit number` then type `14`, `134514171` (0x080485fb) get the shell
 
+## 59
+  find the buffer size, using `pwntools` and `ROPgadget` in `python2`
+
 ## 81 easy
   hex and base64
 
