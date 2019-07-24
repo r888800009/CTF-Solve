@@ -45,6 +45,11 @@
 ## 31
   create cookie `show_hidden`:`yes`
 
+## 32
+  editor vulnerability, password save in file  
+  [cat flag](https://dafuq-manager.hackme.inndy.tw/index.php?action=edit&item=../../.config/.htusers.php)
+  crack by rainbow table
+
 ## 41 helloworld
   ```
     objdump -d helloworld | less
