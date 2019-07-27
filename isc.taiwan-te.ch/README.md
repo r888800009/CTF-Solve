@@ -7,6 +7,7 @@ $(echo > /tmp/$(tail /$(echo fl)$(echo ag)); echo /tmp)
 
 ## pwntools bof
   see github source code 
+  避免分散發出封包
 
 ## jssrf
 1. [see source code](http://140.118.126.237:8889/source)
