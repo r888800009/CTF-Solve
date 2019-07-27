@@ -5,7 +5,10 @@ $(echo > /tmp/$(tail /$(echo fl)$(echo ag)); echo /tmp)
 ```
 
 
-## pwntools bof
+## pwns
+  - pwntools
+  - bof
+  - bof2
   see github source code 
   避免分散發出封包
 
