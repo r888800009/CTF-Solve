@@ -1,5 +1,14 @@
 # CTF-Solve
 ## pwn
+  ``` bash
+  # check file type (ex: 32bit, 64bit
+  file binary
+
+  # check sec 
+  checksec --file=a.out 
+
+  ```
+
 ### pwntools
   debug
   ``` python
