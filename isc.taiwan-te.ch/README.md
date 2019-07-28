@@ -10,6 +10,7 @@ $(echo > /tmp/$(tail /$(echo fl)$(echo ag)); echo /tmp)
   - bof
   - bof2
   - ret2sc
+  - gothijack 找到got位置指向shellcode
   see github source code 
   避免分散發出封包
   `context.log_level ='debug'`
