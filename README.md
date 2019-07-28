@@ -9,6 +9,20 @@
 
   ```
 
+### ROP tools
+  - [ROPgadget](https://github.com/JonathanSalwan/ROPgadget) find gadget
+  - [Ropper](https://github.com/sashs/Ropper) find gadget and semantic
+  - [ROPGenerator](https://github.com/Boyan-MILANOV/ropgenerator) semantic
+  
+  ``` bash
+  # install ropper
+  pacman -S ropper
+  pacaur -S python-z3 python-pyvex-git  python-archinfo-git # if need semantic
+  ```
+
+#### Q&A
+  - `ropper` `semantic` not found gadgets using `--clear-cache`
+
 ### pwntools
   debug
   ``` python
