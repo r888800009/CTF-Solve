@@ -27,6 +27,7 @@
   - [linux常见漏洞利用技术实践](https://wooyun.js.org/drops/linux%E5%B8%B8%E8%A7%81%E6%BC%8F%E6%B4%9E%E5%88%A9%E7%94%A8%E6%8A%80%E6%9C%AF%E5%AE%9E%E8%B7%B5.html)
   - [pwntools的一些简单入门总结](https://prowes5.github.io/2018/08/06/pwntools%E7%9A%84%E4%B8%80%E4%BA%9B%E7%AE%80%E5%8D%95%E5%85%A5%E9%97%A8%E6%80%BB%E7%BB%93/)
   - [Exploit利器——Pwntools](http://brieflyx.me/2015/python-module/pwntools-intro/)
+  - [Binary exploitatio](https://www.slideshare.net/AngelBoy1/binary-exploitation-ais3)
 
 ## web
   - SSRF
