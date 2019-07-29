@@ -1,4 +1,5 @@
 # CTF-Solve
+
 ## pwn
   ``` bash
   # check file type (ex: 32bit, 64bit
@@ -54,3 +55,9 @@
 
 ### XSStrike
   - [XSStrike](https://github.com/s0md3v/XSStrike)
+  
+## other
+  hashcat insall
+  ``` bash
+  sudo pacman -S hashcat, opencl-mesa # or opencl-nvidia
+  ```
