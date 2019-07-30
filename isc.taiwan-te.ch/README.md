@@ -12,6 +12,7 @@ $(echo > /tmp/$(tail /$(echo fl)$(echo ag)); echo /tmp)
   - ret2sc
   - gothijack 找到got位置指向shellcode
   - rop
+  - ret2plt
 
   ### notes  
   - see github source code 
