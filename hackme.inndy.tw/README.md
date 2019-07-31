@@ -119,6 +119,9 @@ cat /var/tmp/1
 ## 59
   find the buffer size, using `pwntools` and `ROPgadget` in `python2`
 
+## 60
+  write `/bin/sh` to `.data`
+
 ## 81 easy
   hex and base64
 
