@@ -1,0 +1,4 @@
+*/peda-session-*.txt
+peda-session-*.txt
+*/.gdb_history
+.gdb_history
