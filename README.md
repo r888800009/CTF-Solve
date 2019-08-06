@@ -1,5 +1,6 @@
 # CTF-Solve
   - [radare2](https://github.com/radare/radare2) reverse engineering framework
+  - [cutter](https://github.com/radareorg/cutter) GUI for radare2 
 
 ## pwn
   ``` bash
