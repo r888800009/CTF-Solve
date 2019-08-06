@@ -92,3 +92,10 @@
   # echo urlencode('admin|' . hash_hmac('sha256', 'admin', hash_hmac('sha256',$nonce, $flag)));
   ``` 
   修改玩cookie之後[享受](http://ctf.bitx.tw:10002/?nonce[]=thisisanonce)
+
+# Picture Repairer
+  透過`pngcheck`檢查錯誤，發現錯誤的IHDR數值，
+  透過`vim -b 3.png`開啟檔案之後用`:%!xxd`檢視數據
+  並且修正高度之後透過`:%!xxd -r`還原成二進位格式
+  存檔後開啟看到flag
+  
