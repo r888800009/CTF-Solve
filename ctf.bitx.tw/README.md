@@ -4,6 +4,7 @@
   - `Cookie`: cookie為`帳號|md5(md5(帳號))`
 
 # 水題
+  - `Tcash`: 建立字母哈希表對映解出
   - `URLdecode`: 兩次編碼`FLAG`
   - `hash`: php '0e'
   - `Regular Expression`: `NTIHS{123456_Lol_fucK_}`
