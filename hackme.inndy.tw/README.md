@@ -122,6 +122,9 @@ cat /var/tmp/1
 ## 60
   write `/bin/sh` to `.data`
 
+## 63
+  %hhn
+
 ## 81 easy
   hex and base64
 
