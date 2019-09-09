@@ -122,6 +122,9 @@ cat /var/tmp/1
 ## 60
   write `/bin/sh` to `.data`
 
+## 61
+  binary search
+
 ## 63
   %hhn
 
