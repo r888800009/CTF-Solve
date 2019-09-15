@@ -13,6 +13,7 @@
   ```
 
 ### ROP tools
+  - [ropshell](http://ropshell.com/)
   - [ROPgadget](https://github.com/JonathanSalwan/ROPgadget) find gadget
   - [Ropper](https://github.com/sashs/Ropper) find gadget and semantic
   - [ROPGenerator](https://github.com/Boyan-MILANOV/ropgenerator) semantic
