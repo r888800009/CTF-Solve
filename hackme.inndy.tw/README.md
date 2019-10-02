@@ -48,6 +48,9 @@
 ## 21 SQL Injection
   user: `admin`, password:``\' or `user`= "admin" #``
 
+## 23
+  `\'/**/or/**/name<>"guest"#`
+
 ## 31
   create cookie `show_hidden`:`yes`
 
