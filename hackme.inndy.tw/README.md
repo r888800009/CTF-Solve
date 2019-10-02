@@ -128,6 +128,10 @@ cat /var/tmp/1
 ## 63
   %hhn
 
+## 66
+  create `flag` file then make number of char enough,
+  find the `argv[0]` then replace to flag buffer
+
 ## 81 easy
   hex and base64
 
