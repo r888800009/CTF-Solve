@@ -15,9 +15,9 @@ http://final.ctf.bitx.tw:30001/?secret=QNKCDZO
 
 ### Ok, Google
 原始碼有一個假flag，該題目可能跟搜尋引擎有關，
-`roobots.txt`找到secret.php
+`roobots.txt`找到`secret.php`
 
-但是secret.php依然會判斷user agent
+但是`secret.php`依然會判斷user agent
 ``` bash
 curl --user-agent "Googlebot" final.ctf.bitx.tw:10000/secret.php
 ```
@@ -118,7 +118,7 @@ flag的格式為
 `WXN{[A-Za-z0-9_!? ()]+}`
 
 根據out.txt，可以發現原文長度為18，
-因此猜測 `256 * 18` 為4608是可行的，不過要注意是否重複呼叫隨機樹，否則會導致問題。
+因此猜測 `256 * 18` 為4608是可行的，不過要注意是否重複呼叫隨機數，否則會導致問題。
 
 ### Minecraft Symbol
 不解釋，反正就腹膜書文字轉成英文
@@ -148,7 +148,9 @@ Stegsolve解決即可
 並且選定LSB與BGR得出文字，內含有flag
 
 ### Corrupted PNG
+``` bash
 pngcheck -vvf corrupted_png.png 
+```
 
 pngcheck檢查出IHDR錯誤，透過vim與xxd進行編輯
 作法如同
