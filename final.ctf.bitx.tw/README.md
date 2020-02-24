@@ -18,9 +18,9 @@ http://final.ctf.bitx.tw:30001/?secret=QNKCDZO
 `roobots.txt`找到secret.php
 
 但是secret.php依然會判斷user agent
-
+``` bash
 curl --user-agent "Googlebot" final.ctf.bitx.tw:10000/secret.php
-
+```
 get flag
 
 
@@ -37,7 +37,7 @@ png裡面格外的資訊。
 
 ### Fortune
 推測是執行shell指令因此嘗試
-命令注入$(cat flag.txt)
+命令注入`$(cat flag.txt)`
 
 ### Vigenetale
 透過線上詞頻分析解決
@@ -127,8 +127,9 @@ flag的格式為
 可以看到output的每行都是hash值，
 並且都是由兩個字元組成嘗試產生128^2 = 16384的彩虹表似乎有點大，
 不過依然可以先嘗試看看直接生成彩虹表。
-
+``` bash
 ./one-line-python.py
+```
 
 ### Ez RSA
 透過RSA CTF Tool解決
@@ -213,9 +214,10 @@ D
 ```
 
 概念驗證完成，編寫前綴樹讀取程式遍歷。
-
+``` bash
 g++ dictionary-search.cpp
 ./a.out
+```
 
 ### Rareac
 該題一直搞不清楚是什麼密碼，可能是有某種位移。
