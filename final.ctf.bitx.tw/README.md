@@ -15,7 +15,7 @@ http://final.ctf.bitx.tw:30001/?secret=QNKCDZO
 
 ### Ok, Google
 原始碼有一個假flag，該題目可能跟搜尋引擎有關，
-`roobots.txt`找到`secret.php`
+`robots.txt`找到`secret.php`
 
 但是`secret.php`依然會判斷user agent
 ``` bash
