@@ -223,4 +223,28 @@ long_to_bytes(m)
   透過`vim -b 3.png`開啟檔案之後用`:%!xxd`檢視數據
   並且修正高度之後透過`:%!xxd -r`還原成二進位格式
   存檔後開啟看到flag
-  
+
+# Normal Forensics
+``` bash
+unrar e forensics.rar
+file F1aG.flag   
+unrar e F1aG.flag
+file where.png flag.log
+```
+
+檢查where.png發現裡面有提示密碼
+``` bash
+vim -b where.png
+```
+
+密碼為
+``` plaintext
+magic number
+```
+
+並且解開zip
+``` bash
+unzip flag.log
+```
+
+注: 之前解其實有發現這些東西，但不知道為什麼解不出flag
