@@ -9,6 +9,31 @@
   - `hash`: php '0e'
   - `Regular Expression`: `NTIHS{123456_Lol_fucK_}`
   - `Rockyou`: 利用`rockyou.txt`搭配`fcrackzip`
+  -  `StegoSolve`: alpha plane 0
+
+### HTTP水題
+  - Http Method : GET
+  ``` plaintext
+  http://ctf.bitx.tw:10011/?like=flag
+  ```
+  - Http Method : POST
+  ``` bash
+  curl http://ctf.bitx.tw:10012/ -X POST --data "like=flag"
+  ```
+  - Cookie Practice
+  ``` bash
+  curl http://ctf.bitx.tw:10015/ -X POST --cookie "user=admin"
+  ```
+  - User Agent
+  ``` bash
+  curl http://ctf.bitx.tw:10014/ --user-agent "HACKERMAN"  
+  ```
+  - Status Code : 302
+  ``` bash
+  curl http://ctf.bitx.tw:10007/ -i  
+  curl http://ctf.bitx.tw:10007/not_here.php -i 
+  ```
+
 
 ### 意義不大
   - `Easy Forensics`: `strings 1.jpg`
@@ -23,6 +48,7 @@
   - `Transposition`: Transposition solver
   - `Base Family`: ascii85->base64->base58->base32
   - `base64`
+  - `Vigenere`
 
 ### 意義不大
   - `ok`: ook decoder 
@@ -44,6 +70,105 @@
   n = p * q = 1887367
   m = (c ^ d) % n
   ```
+
+# RSA Brute Force
+factordb.com查詢n發現為composite，並且沒有已知的因數。
+並且題目提示透過爆破運算，因此由0~127建立反查表。
+透過反查表得出答案
+
+# NeNeNe
+發現e極小為5，猜測`m ** e < N`，可以直接開五次方。
+
+參考[Google CTF 2017 Crypto 201 RSA CTF Challenge](https://ddaa.tw/gctf_crypto_201_rsa_ctf_challenge.html)
+
+# Comodulusmon
+題目給了兩個e與c，並且題名看起來有共模的意思。
+這邊採用RSA共模攻擊。
+
+參考[RSA 共模攻击 Isc2016——PhrackCTF](https://jianshu.com/p/9b44512d898f)
+
+注: 查資料的時候發現前幾個資料都是自己編寫egcd而不是使用
+`gmpy2.gcdext()`。
+
+解出來s1與s2為負數時，求`模反元素 ** -s`，
+而這邊一樣使用gmpy2提供的函數`powmod(x, y, N)`即可得出正確結果。
+
+# Caesar Advanced
+這題使用一般的rot或凱薩密碼解碼器解不出來，
+猜測改給定的是flag，並且前5個字一定是NTIHS。
+
+嘗試檢查距離
+``` python
+m = 'NTIHS'
+c = 'MRFDN'
+for i in range(0, 5):
+  print(ord(c[i]) - ord(m[i])) 
+```
+
+可以發現是直接遞減的，因此在還原的時候也跟著遞增距離
+``` python
+c = 'MRFDNu<Y\iVfRiZdWM\^Og'
+m = ''
+for i in range(0, len(c)):
+  m += chr(ord(c[i]) + (i + 1)) 
+
+print(m)
+```
+
+# (΄◕◞౪◟◕‵)
+摩斯編碼。
+``` plaintext
+%s/━(　　΄◕)━(　΄◕◞౪)━(΄◕◞౪◟◕‵)━(౪◟◕‵　)━(◕‵　　)/-/g
+%s/━(　　΄◔)━(　΄◔◞౪)━(΄◔◞౪◟◔‵)━(౪◟◔‵　)━(◔‵　　)/./g
+%s/━(      )━(      )━(         )━(        )━(       )/ /g
+%s/━(    　)//g
+%s/━(　　　)//g
+```
+
+# RSA Backdoor
+湊數字的數學題，必須對RSA的公式很熟
+``` plaintext
+c = m ^ e mod N
+m = c ^ d mod N
+ed mod phi = 1 
+phi = (p - 1) * (q - 1)
+```
+
+而該題給定`ed^2 + 7phi = x`，並且
+``` plaintext
+m = c ^ d mod N
+  = (m ^ e) ^ d mod N
+  = m ^ (ed) mod N
+```
+
+由於`m ^ e mod N = c`，意味著 `c` 可以轉變為`m ^ e`，
+因此若要得出密文的話，則要導出 `c` 轉變為 `m` 的等式。
+
+並且利用`ed mod phi = 1`與**歐拉定理**`a ^ phi mod N = 1`，
+前者代表只要等式含有`ed`即可消去為`1`，後者代表遇見`Phi`可以
+將代數以1消去。
+
+並且根據以上兩個條件進行推導。
+``` plaintext
+c ^ (ed^2 + 7phi) mod N = m ^ (e(ed^2 + 7phi)) mod N
+  = m ^ ((ed)^2 + 7phi * e)) mod N
+  = m ^ (1 + 7phi * e) mod N
+  = m ^ (1) * (m ^ phi) ^ 7e mod N
+  = m * 1 mod N
+  = m
+```
+
+``` python
+from Crypto.Util.number import long_to_bytes
+x = 99049806755949831499702101584326074860496499513217890004533526218235
+e = 102276472707445191834861046023863146812698689312864918624981283
+c = 22087998134741103222334188921466973837076811976618565524994265771911
+n = 207248826184348862442533988452452635712686044260698245551080231700741 
+m = pow(c, x, n)
+long_to_bytes(m)
+```
+
+參見[理解 RSA 算法](https://wsfdl.com/algorithm/2016/02/11/%E7%90%86%E8%A7%A3RSA%E7%AE%97%E6%B3%95.html)
 
 # pwn
  - `bof`: ~~少8就過~~，透過ret2plt的方法解決
