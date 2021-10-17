@@ -305,7 +305,31 @@ cat /var/tmp/1
   write `/bin/sh` to `.data`
 
 ## 61
-  binary search
+  binary search or overflow to `print_flag`
+
+```
+void print_flag(void)
+{
+  system("/bin/cat fake_flag");
+  return;
+}
+```
+
+
+
+## 62 pwn toooomuch-2
+
+```
+Canary                        : ✘
+NX                            : ✘
+PIE                           : ✘
+Fortify                       : ✘
+RelRO                         : ✘
+```
+
+32 bit
+
+return to .bss and execute .bss
 
 ## 63
   %hhn
