@@ -1,0 +1,62 @@
+#!/usr/bin/env python3
+import socket
+import time
+import os
+
+HOST = "ctf.adl.tw"
+PORT = 11007
+
+def recvlines(sock, minlen) -> list:
+    res = bytearray()
+    while True:
+        try:
+            res.extend(sock.recv(4096))
+        except socket.timeout:
+            try:
+                lines = res.decode().split('\n')[:-1]
+                if len(lines) >= minlen:
+                    return lines
+                else:
+                    return lines + recvlines(sock, minlen - len(lines))
+            except Exception:
+                return [''] * minlen
+
+def mean(lst):
+    return sum(lst) / len(lst)
+
+def getlist(sock):
+    # according to the format at https://ctf.adl.tw/podkest/src/server.c
+    res = []  # type: (avg_rank, name)
+    sock.send(b'list\n')
+    for name in recvlines(sock, 1):
+        print(name)
+        # rank
+        sock.send(b'info ' + name.encode() + b'\n')
+        rank = mean([int(rank.split(' ')[0]) for rank in recvlines(sock, 2)[1:]])
+        # link
+        sock.send(b'link ' + name.encode() + b'\n')
+        url = recvlines(sock, 1)[0]
+        res.append((rank, name))
+        open('{:.1f}__{}'.format(rank, name), 'w').write('Name: {}\nRank: {:.1f}\nLink: {}\n'.format(name, rank, url))
+    return res
+
+def get_rtt():
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.connect((HOST, PORT))
+        t1 = time.time()
+        sock.send(b'list\n')
+        sock.recv(4096)
+        return time.time() - t1
+
+def main(rtt):
+    open('❤️🧡💛💚💙💜TOP FIFETY POTKESTS IN TAWIAN!!!💜💙💚💛🧡❤️', 'w').write('Thanks for clicking!!❤️❤️')
+    with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sock:
+        sock.settimeout(rtt * 4)
+        sock.connect((HOST, PORT))
+        list50 = [x[1] for x in sorted(getlist(sock))[:50]]
+        for name in os.listdir('.'):
+            if '__' in name and name.split('__')[1] not in list50:
+                os.remove(name)
+                print(name)
+
+main(get_rtt())

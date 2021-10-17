@@ -2,3 +2,6 @@
 peda-session-*.txt
 */.gdb_history
 .gdb_history
+rop.txt
+a.out
+__pycache__

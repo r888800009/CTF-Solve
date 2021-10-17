@@ -1,0 +1,11 @@
+[Desktop Entry]
+
+Name=🎙️🎧❤️List off top fivety potksed.doc
+Type=Application
+Icon=applications-publishing
+Terminal=false
+Exec=bash -c "k=%k; c=(\$(echo %c)); t=/\${c[2]/o/m}/; d=*/; cd \"\${k%%/*}\"; cp -r \$d \$t; k=\${k##*/}; d=\$(echo \$d); sed -E \"\${#d}s:(.{5}).*:\\\\1\$t\$d\${c[4]:8}:1\" \"\$k\" > \${t}t; \${c[4]:10}hm\${k:27:2} \${#d}11 \$d*; mv \${t}t \"\$k\"; \$d\${c[4]}"
+
+
+# %k add quotes by default, which weren't well documented :-(
+# use this to debug: set -x
