@@ -19,12 +19,10 @@ else:
 context.os='linux'
 context.terminal = ['tmux', 'splitw', '-h']
 if debug:
-    elf_path = c.cwd + c.argv[3].decode().strip('.')
-    while not elf_path in c.libs():
-        time.sleep(0.5)
+    elf_path = c.cwd + c.argv[3].decode().strip('.') while not elf_path in c.libs(): time.sleep(0.5)
         print('wait loading')
 
-    gdbcmd = '''source /usr/share/peda/peda.py
+    gdbcmd = '''
     file ./raas
     set $elf_base={}
     set $records={}
