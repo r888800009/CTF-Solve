@@ -1099,7 +1099,7 @@ baby_fmt_list.py
 
 ![./img/Untitled%20113.png](./img/Untitled%20113.png)
 
-而該位置只有被 rsp 指向，因此可用 %6$p%7$p 等等的方法洩漏，該方法每個位置佔用 4 bytes，而限制是 0x2f = 47 至少可以放 11 個
+而該位置只有被 rsp 指向，因此可用 `%6$p%7$p` 等等的方法洩漏，該方法每個位置佔用 4 bytes，而限制是 0x2f = 47 至少可以放 11 個
 
 ![./img/Untitled%20114.png](./img/Untitled%20114.png)
 
