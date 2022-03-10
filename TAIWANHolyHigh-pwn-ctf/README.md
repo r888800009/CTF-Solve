@@ -2,15 +2,15 @@
 
 # 好厲害 2020  BreakAllCTF PWN-CTF
 
-![./img/Untitled%2027.png](./img/Untitled 27.png)
+![./img/Untitled%2027.png](./img/Untitled%2027.png)
 
-![./img/Untitled%2028.png](./img/Untitled 28.png)
+![./img/Untitled%2028.png](./img/Untitled%2028.png)
 
 ## level 4 heap2-sean_Pwn-6
 
 這題一樣有後門
 
-![./img/Untitled%2029.png](./img/Untitled 29.png)
+![./img/Untitled%2029.png](./img/Untitled%2029.png)
 
 ```
 Canary                        : ✘
@@ -20,25 +20,25 @@ Fortify                       : ✘
 RelRO                         : Partial
 ```
 
-![./img/Untitled%2030.png](./img/Untitled 30.png)
+![./img/Untitled%2030.png](./img/Untitled%2030.png)
 
 看起來好像已經 free 過，因為 malloc 的 q 不等於 0 ，之後他會不斷要求輸入直到蓋寫相關 point ，很明顯這題有 heap overflow
 
-![./img/Untitled%2031.png](./img/Untitled 31.png)
+![./img/Untitled%2031.png](./img/Untitled%2031.png)
 
 會不斷 free 就要思考 unlink 的利用，而且這題並沒有 ASLR ，並且這裡正好有一個 heap 地址可以使用，該地址為 p 的位置，因此可以繞過 free 的驗證機制，並且可以蓋寫 p 的值來達成一次的任意寫入。
 
-![./img/Untitled%2032.png](./img/Untitled 32.png)
+![./img/Untitled%2032.png](./img/Untitled%2032.png)
 
-![./img/Untitled%2033.png](./img/Untitled 33.png)
+![./img/Untitled%2033.png](./img/Untitled%2033.png)
 
 一開始要先定位 forging chunk 的位置，可以透過 gdb  gef 查看相關資訊
 
-![./img/Untitled%2034.png](./img/Untitled 34.png)
+![./img/Untitled%2034.png](./img/Untitled%2034.png)
 
 p+0x100-0x10可以看到 q 的 pre size 與 chunk size
 
-![./img/Untitled%2035.png](./img/Untitled 35.png)
+![./img/Untitled%2035.png](./img/Untitled%2035.png)
 
 p_addr = 0x601080
 
@@ -50,7 +50,7 @@ flat({0: p64(p_addr - 0x18), 8: p64(p_addr - 0x10)}, length=0x100-0x10) + p64(pr
 
 成功 unlink 之後 可以看到指向 0x601068 ，這時只要蓋寫使他指向 got 就可以蓋寫成後門，這邊打算把 gets 給蓋寫掉
 
-![./img/Untitled%2036.png](./img/Untitled 36.png)
+![./img/Untitled%2036.png](./img/Untitled%2036.png)
 
 ```
 BreakALLCTF{XUnGU4wDb65I5hJnNhwH}
@@ -72,7 +72,7 @@ RelRO                         : Partial
 
 分析過後，看起像是嘗試重新得到 ptr1 的 chunk ，因為解讀資料只能從該 chunk 取得，並且取得的值會作為指標使用。
 
-![./img/Untitled%2037.png](./img/Untitled 37.png)
+![./img/Untitled%2037.png](./img/Untitled%2037.png)
 
 也就是只要傳入一個指標劫持 exit 到後門就可以了
 
@@ -94,21 +94,21 @@ c++ 題 x64
 
 使用的 strcpy 似乎導致 heap overflow ，Dog 與 Cat 皆有問題
 
-![./img/Untitled%2038.png](./img/Untitled 38.png)
+![./img/Untitled%2038.png](./img/Untitled%2038.png)
 
 兩個 class 都有 vtable ，敢興趣的是如何劫持
 
-![./img/Untitled%2039.png](./img/Untitled 39.png)
+![./img/Untitled%2039.png](./img/Untitled%2039.png)
 
-![./img/Untitled%2040.png](./img/Untitled 40.png)
+![./img/Untitled%2040.png](./img/Untitled%2040.png)
 
 嘗試建立多個動物後，猜測 chunk 是某種類似 STL 容器的結構，而上面則是動物本生，並且動物本身會指向一個 fuction point point ，而目的在於如何串該值
 
-![./img/Untitled%2041.png](./img/Untitled 41.png)
+![./img/Untitled%2041.png](./img/Untitled%2041.png)
 
 檢查是否能夠執行，因為 nx 沒開啟 heap 和 data 段可以執行，把 shell 寫在 zoo 的 name 上，並且 point 上去做類似上面的結構
 
-![./img/Untitled%2042.png](./img/Untitled 42.png)
+![./img/Untitled%2042.png](./img/Untitled%2042.png)
 
 必須注意寫入字串時不可以包含空白，以免 cout 出錯。
 
@@ -132,23 +132,23 @@ RelRO                         : Full
 
 可以看到程式不怎麼複雜
 
-![./img/Untitled%2043.png](./img/Untitled 43.png)
+![./img/Untitled%2043.png](./img/Untitled%2043.png)
 
 可以知道 1 的時候會觸發 malloc， 2 會觸發 free 
 
-![./img/Untitled%2044.png](./img/Untitled 44.png)
+![./img/Untitled%2044.png](./img/Untitled%2044.png)
 
 可以看到該版本的 tcache 可以 double free ，如此，就可以控制 tcache chunk 裡面的 fd ，達到任意寫入的目的
 
-![./img/Untitled%2045.png](./img/Untitled 45.png)
+![./img/Untitled%2045.png](./img/Untitled%2045.png)
 
 pie 是關閉的， bss 有 stdout, stderr..
 
-![./img/Untitled%2046.png](./img/Untitled 46.png)
+![./img/Untitled%2046.png](./img/Untitled%2046.png)
 
 如果直接把 chunk 指到 stderr 會遇到無效地址，相反的可以往上 8 格指進去，這樣就會當成結尾而清空 tcache bin
 
-![./img/Untitled%2047.png](./img/Untitled 47.png)
+![./img/Untitled%2047.png](./img/Untitled%2047.png)
 
 ```
 one_gadget libc-2.27.so
@@ -177,15 +177,15 @@ FLAG{tcache_performance_vs_security}
 
 under out of bound? 似乎不行
 
-![./img/Untitled%2048.png](./img/Untitled 48.png)
+![./img/Untitled%2048.png](./img/Untitled%2048.png)
 
 uaf
 
-![./img/Untitled%2049.png](./img/Untitled 49.png)
+![./img/Untitled%2049.png](./img/Untitled%2049.png)
 
 maybe leak 
 
-![./img/Untitled%2050.png](./img/Untitled 50.png)
+![./img/Untitled%2050.png](./img/Untitled%2050.png)
 
 ```
 Canary                        : ✓
@@ -252,7 +252,7 @@ objdump -T ./libc-2.23.so  | grep 'hook'
 
 [https://github.com/bminor/glibc/blob/ab30899d880f9741a409cbc0d7a28399bdac21bf/malloc/malloc.c#L3385](https://github.com/bminor/glibc/blob/ab30899d880f9741a409cbc0d7a28399bdac21bf/malloc/malloc.c#L3385)
 
-![./img/Untitled%2051.png](./img/Untitled 51.png)
+![./img/Untitled%2051.png](./img/Untitled%2051.png)
 
 一開始要先 overlap chunk
 
@@ -266,17 +266,17 @@ objdump -T ./libc-2.23.so  | grep 'hook'
 telescope $malloc_hook-0x3-0x30 50
 ```
 
-![./img/Untitled%2052.png](./img/Untitled 52.png)
+![./img/Untitled%2052.png](./img/Untitled%2052.png)
 
 這邊取 $malloc_hook-0x3-0x20 可以看到成功構造
 
-![./img/Untitled%2053.png](./img/Untitled 53.png)
+![./img/Untitled%2053.png](./img/Untitled%2053.png)
 
 因為左移 3 bytes 得到 0x7f ，所以需要透過三個 byte padding 來右移  3 bytes
 
 完成之後寫下 one gadgets 可以看到記憶體被蓋寫
 
-![./img/Untitled%2054.png](./img/Untitled 54.png)
+![./img/Untitled%2054.png](./img/Untitled%2054.png)
 
 為了方便除錯 透過 strace 來檢查是否有跑到 syscall ，先嘗試啟動 process 停止讓 strace attach 上 pid
 
@@ -290,37 +290,37 @@ strace -p pid
 
 可以看到成功執行 syscall 但是沒有成功 get shell
 
-![./img/Untitled%2055.png](./img/Untitled 55.png)
+![./img/Untitled%2055.png](./img/Untitled%2055.png)
 
 測試了一下似乎沒辦法使用，檢查了一下值都不為 null
 
 如果能嘗試劫持 stack 也是可行的，但是缺乏 stack 的基準
 
-![./img/Untitled%2056.png](./img/Untitled 56.png)
+![./img/Untitled%2056.png](./img/Untitled%2056.png)
 
 回顧一下 malloc_hook ，如果綁定 system 的話 ，size 在傳入 /bin/sh 的指標即可觸發
 
-![./img/Untitled%2057.png](./img/Untitled 57.png)
+![./img/Untitled%2057.png](./img/Untitled%2057.png)
 
 uint 似乎不行
 
-![./img/Untitled%2058.png](./img/Untitled 58.png)
+![./img/Untitled%2058.png](./img/Untitled%2058.png)
 
 由於有多個 hook ，或許可以達成連環 call 的效果，可以透握此方法調整 rsp
 
-![./img/Untitled%2059.png](./img/Untitled 59.png)
+![./img/Untitled%2059.png](./img/Untitled%2059.png)
 
 而這裡直接跳 realloc_hook
 
-![./img/Untitled%2060.png](./img/Untitled 60.png)
+![./img/Untitled%2060.png](./img/Untitled%2060.png)
 
-![./img/Untitled%2061.png](./img/Untitled 61.png)
+![./img/Untitled%2061.png](./img/Untitled%2061.png)
 
-![./img/Untitled%2062.png](./img/Untitled 62.png)
+![./img/Untitled%2062.png](./img/Untitled%2062.png)
 
 原先的 gadget 如果採用 0x70 的話，推疊在 -8 就可以指向 null 而成立
 
-![./img/Untitled%2063.png](./img/Untitled 63.png)
+![./img/Untitled%2063.png](./img/Untitled%2063.png)
 
 get shell
 
@@ -332,11 +332,11 @@ FLAG{heap_15_funnnnnnnnnnnnnnnnnnnnnnnnn}
 
 這題有後門可以使用，並且看地址像沒有 aslr
 
-![./img/Untitled%2064.png](./img/Untitled 64.png)
+![./img/Untitled%2064.png](./img/Untitled%2064.png)
 
 一開始先逆向出大部分的功能，可以看出大致的功能
 
-![./img/Untitled%2065.png](./img/Untitled 65.png)
+![./img/Untitled%2065.png](./img/Untitled%2065.png)
 
 後門沒有 xref 的情況，代表可能需要透過某種方式控制 rip
 
@@ -350,7 +350,7 @@ RelRO                         : Full
 
 這裡可以看到他 malloc 之後在 heap 放入 func point ，只要劫持 func pointer 即可
 
-![./img/Untitled%2066.png](./img/Untitled 66.png)
+![./img/Untitled%2066.png](./img/Untitled%2066.png)
 
 因此只需要在 malloc 一個 0xa0 並且 0x98 填上 backdoor 就可以了
 
@@ -374,7 +374,7 @@ RelRO                         : Full
 
 有直接的 print 就有 format string ，讓人意外的好像沒有檢查 printable 字元 (與名稱感覺不一樣)
 
-![./img/Untitled%2067.png](./img/Untitled 67.png)
+![./img/Untitled%2067.png](./img/Untitled%2067.png)
 
 先找 one gadget
 
@@ -395,29 +395,29 @@ constraints:
 
 但是這題沒有比較好的方法可以寫入 ret addr ，觀察堆疊發現 rbp 可以被控制，並且剛好在 ret addr 的位置
 
-![./img/Untitled%2068.png](./img/Untitled 68.png)
+![./img/Untitled%2068.png](./img/Untitled%2068.png)
 
  可以看到 rbp 位於 `%7$p` ，同時下面 `%10$p` 也 leak libc 的 __libc_start_main+231
 
-![./img/Untitled%2069.png](./img/Untitled 69.png)
+![./img/Untitled%2069.png](./img/Untitled%2069.png)
 
 希望可以在執行 exit 之後，就直接控制 rip 變數比較少
 
-![./img/Untitled%2070.png](./img/Untitled 70.png)
+![./img/Untitled%2070.png](./img/Untitled%2070.png)
 
 也就是說 prog1 的 ret addr 必須為 0401238 ，找到一個位置指向該點，即可蓋寫控制 rip
 
-![./img/Untitled%2071.png](./img/Untitled 71.png)
+![./img/Untitled%2071.png](./img/Untitled%2071.png)
 
 回顧之後可以看到該位置位於 `%8$p`
 
-![./img/Untitled%2072.png](./img/Untitled 72.png)
+![./img/Untitled%2072.png](./img/Untitled%2072.png)
 
  %hhn 只會動到一個 byte，但現在依然無法控制第 7 個值，這裡需要一個指標，往前回顧發現 %5$p 正好可以控制該 rbp
 
-![./img/Untitled%2073.png](./img/Untitled 73.png)
+![./img/Untitled%2073.png](./img/Untitled%2073.png)
 
-![./img/Untitled%2074.png](./img/Untitled 74.png)
+![./img/Untitled%2074.png](./img/Untitled%2074.png)
 
 步驟是
 
@@ -434,9 +434,9 @@ constraints:
 
 可以看到 rsp+0x40 對到 `%16$p` 而 ret addr 在 `%8$p`，先直接使用 `%lln` 進行清理，要把 `%7$p` 控制到該位置
 
-![./img/Untitled%2075.png](./img/Untitled 75.png)
+![./img/Untitled%2075.png](./img/Untitled%2075.png)
 
-![./img/Untitled%2076.png](./img/Untitled 76.png)
+![./img/Untitled%2076.png](./img/Untitled%2076.png)
 
 如果 offset 還是算不准，就把 ret address 以下的清理乾淨，雖然比較慢
 
@@ -480,7 +480,7 @@ GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.4) 5.4.0 20160609
 
 0x00000000004006f3 : pop rdi ; ret
 
-![./img/Untitled%2077.png](./img/Untitled 77.png)
+![./img/Untitled%2077.png](./img/Untitled%2077.png)
 
 ```
 AngelboyCTF{aR0uNisULrYO4eVnG2jI}
@@ -504,7 +504,7 @@ ROPgadget --binary simplerop_revenge --ropchain
 
 看起來像 buffer overflow
 
-![./img/Untitled%2078.png](./img/Untitled 78.png)
+![./img/Untitled%2078.png](./img/Untitled%2078.png)
 
 ```
 AngelboyCTF{ZnkaWq9OU80usJjGUnax}
@@ -514,11 +514,11 @@ AngelboyCTF{ZnkaWq9OU80usJjGUnax}
 
 可以看到 read 溢位的空間被限制
 
-![./img/Untitled%2079.png](./img/Untitled 79.png)
+![./img/Untitled%2079.png](./img/Untitled%2079.png)
 
 至少需要 0x28 個值才會蓋到 ret addr ， 現在只能控制到 rbp 後兩 bytes ，或許不需要 ret2leave ，因為回到 main 之後也會進行一次 leave ，這裡先做這個處理把 rbp 控制往上轉移，因為沒辦法直接蓋寫成 buf2
 
-![./img/Untitled%2080.png](./img/Untitled 80.png)
+![./img/Untitled%2080.png](./img/Untitled%2080.png)
 
 當中在除錯的時候 local_28 當中的 0x20 會爛掉，因此只能塞三個 gadgets 嘗試把 rbp 撞到 gadgets 上面觸發 shellcode (1/16)
 
@@ -548,7 +548,7 @@ ROPgadget --binary rop1 --ropchain
 
 0x000000000040060b : pop rsp ; ret
 
-![./img/Untitled%2081.png](./img/Untitled 81.png)
+![./img/Untitled%2081.png](./img/Untitled%2081.png)
 
 ```
 BreakALLCTF{VPnbcUWBsuyxO4WO4PkM}
@@ -621,7 +621,7 @@ RelRO                         : ✘
 
 內建後門
 
-![./img/Untitled%2082.png](./img/Untitled 82.png)
+![./img/Untitled%2082.png](./img/Untitled%2082.png)
 
 ```
 AngelboyCTF{YodbgBUFJp6ypXRqkKjI}
@@ -673,7 +673,7 @@ RelRO                         : Full
 
 看起來還是 got 但是 got 被保護了 ，不過次就沒有限制 id 的範圍，先計算 rbp 然後往下蓋一個就是 ret addr
 
-![./img/Untitled%2083.png](./img/Untitled 83.png)
+![./img/Untitled%2083.png](./img/Untitled%2083.png)
 
 蓋寫 fget的 retaddress就可以了，因為這樣就不會執行 main 了
 
@@ -689,17 +689,17 @@ RelRO                         : Partial
 
 看起來被使用者資料移動到 stack 上了，很有可能要我蓋寫 retaddr
 
-![./img/Untitled%2084.png](./img/Untitled 84.png)
+![./img/Untitled%2084.png](./img/Untitled%2084.png)
 
 id 要求小於 4 因此無法蓋寫 retaddr
 
-![./img/Untitled%2085.png](./img/Untitled 85.png)
+![./img/Untitled%2085.png](./img/Untitled%2085.png)
 
 並且如果嘗試登入兩次會處發 chk_fail 但是其實可以蓋寫 counter
 
-![./img/Untitled%2086.png](./img/Untitled 86.png)
+![./img/Untitled%2086.png](./img/Untitled%2086.png)
 
-![./img/Untitled%2087.png](./img/Untitled 87.png)
+![./img/Untitled%2087.png](./img/Untitled%2087.png)
 
 感覺要先找到 rbp 之後就可以蓋寫 got 並且退出，但還是沒辦法實現任意蓋寫位置，因為數值都是 int ，或許可以蓋寫呼叫 read 時回到 main 的 ret addr 就可成功 get shell
 
@@ -719,7 +719,7 @@ RelRO                         : Partial
 
 後門被剝離了
 
-![./img/Untitled%2088.png](./img/Untitled 88.png)
+![./img/Untitled%2088.png](./img/Untitled%2088.png)
 
 可以進行 GOT hijack 並且把 puts 蓋寫成 後門
 
@@ -727,11 +727,11 @@ RelRO                         : Partial
 
 這題看起來可以寫入 pin
 
-![./img/Untitled%2089.png](./img/Untitled 89.png)
+![./img/Untitled%2089.png](./img/Untitled%2089.png)
 
 一樣是透過 offset
 
-![./img/Untitled%2090.png](./img/Untitled 90.png)
+![./img/Untitled%2090.png](./img/Untitled%2090.png)
 
 `(0x6010a0 -0x6010c0) // 8`
 
@@ -739,11 +739,11 @@ RelRO                         : Partial
 
 似乎可以透過打印 user 來洩漏 pin
 
-![./img/Untitled%2091.png](./img/Untitled 91.png)
+![./img/Untitled%2091.png](./img/Untitled%2091.png)
 
 (0x06010a0 - 0x06010c0) / 8 = -4 
 
-![./img/Untitled%2092.png](./img/Untitled 92.png)
+![./img/Untitled%2092.png](./img/Untitled%2092.png)
 
 反正就洩漏之後就可以登入 sh
 
@@ -781,7 +781,7 @@ GLIBC_2.2.5
 
 0x7f686eed96a0 0x7f686eed8d90
 
-![./img/Untitled%2093.png](./img/Untitled 93.png)
+![./img/Untitled%2093.png](./img/Untitled%2093.png)
 
 ```
 AngelboyCTF{4LnoMvnymHAkyLE4k56N}
@@ -813,7 +813,7 @@ RelRO                         : Partial
 
 反正就算 offset
 
-![./img/Untitled%2094.png](./img/Untitled 94.png)
+![./img/Untitled%2094.png](./img/Untitled%2094.png)
 
 ## level 1 ret2src
 
@@ -839,25 +839,25 @@ RelRO                         : Partial
 
 題目提示 fmt 修改區域變數
 
-![./img/Untitled%2095.png](./img/Untitled 95.png)
+![./img/Untitled%2095.png](./img/Untitled%2095.png)
 
 這裡直接用 fmtstr 輔助就可以了，其實看起來可以直接緩衝區溢位，一開始先找到 token 的 offset
 
-![./img/Untitled%2096.png](./img/Untitled 96.png)
+![./img/Untitled%2096.png](./img/Untitled%2096.png)
 
 由於需要指定地址，可以看到在 8~11 和 可以輸入地址 a  ，這裡挑第 10 個
 
-![./img/Untitled%2097.png](./img/Untitled 97.png)
+![./img/Untitled%2097.png](./img/Untitled%2097.png)
 
 由於實際的記憶體似乎沒有對齊，因為是 int 只需要改 cd 成 37 即可
 
-![./img/Untitled%2098.png](./img/Untitled 98.png)
+![./img/Untitled%2098.png](./img/Untitled%2098.png)
 
 除錯可以把 `%11p`  印出來
 
 結果 remote 沒有成功執行 system 不知道是故意的還是出壞
 
-![./img/Untitled%2099.png](./img/Untitled 99.png)
+![./img/Untitled%2099.png](./img/Untitled%2099.png)
 
 改用 buffer overflow
 
@@ -877,13 +877,13 @@ Fortify                       : ✘
 RelRO                         : Partial
 ```
 
-![./img/Untitled%20100.png](./img/Untitled 100.png)
+![./img/Untitled%20100.png](./img/Untitled%20100.png)
 
 有現成的後門，可能需要透過一些手法逃逸 不過 canary 關閉的，看起來有 buf overflow 嘗試蓋寫 rsp 找一點 gadget 先 ret gets 在 ret system 但其實只要想辦法把 rdi 導向 cat flag 即可
 
-![./img/Untitled%20101.png](./img/Untitled 101.png)
+![./img/Untitled%20101.png](./img/Untitled%20101.png)
 
-![./img/Untitled%20102.png](./img/Untitled 102.png)
+![./img/Untitled%20102.png](./img/Untitled%20102.png)
 
 但是 input 如果溢出會影響到其他變數，
 
@@ -899,9 +899,9 @@ Fortify                       : ✘
 RelRO                         : Partial
 ```
 
-![./img/Untitled%20103.png](./img/Untitled 103.png)
+![./img/Untitled%20103.png](./img/Untitled%20103.png)
 
-![./img/Untitled%20104.png](./img/Untitled 104.png)
+![./img/Untitled%20104.png](./img/Untitled%20104.png)
 
  這體看起來只需要重新將 id 傳入就可以，有點類似洩漏的 canary 有開啟 NX 代表需要 rop 不過其實有給後門可以使用，只須蓋寫地址即可
 
@@ -921,7 +921,7 @@ RelRO                         : Partial
 
 可 buf overflow, 寫 got 無 ASLR
 
-![./img/Untitled%20105.png](./img/Untitled 105.png)
+![./img/Untitled%20105.png](./img/Untitled%20105.png)
 
 scanf 特性 %s 只吃 whitespace， \0 似乎不吃，根據前面的經驗， `%6$p` 通常為 buffer 起始 (可能是題目的共通性？)，
 
@@ -929,13 +929,13 @@ scanf 特性 %s 只吃 whitespace， \0 似乎不吃，根據前面的經驗， 
 
 但是可以看到實際上 got 的 exit 是指向 fmt-3 裡面的區段，因此將他改成 main 使程式重複循環
 
-![./img/Untitled%20106.png](./img/Untitled 106.png)
+![./img/Untitled%20106.png](./img/Untitled%20106.png)
 
 再來 leak libc 的地址，並且在 main 之下偽造 ret addr ，一旦寫好之後，就可以把 exit 的 got 蓋寫成 ret (如果有需要可以找 pop 相關來控制 rsp) 並且執行 one gadget
 
 在這之前先 leak stack 的內容，找到預定當成 ret addr 的地方，與 leak libc addr
 
-![./img/Untitled%20107.png](./img/Untitled 107.png)
+![./img/Untitled%20107.png](./img/Untitled%20107.png)
 
 其實發現或許可以在一開始就傳入想控制的 rip 位置，之後在 把 exit 蓋寫成 pop ; ret 來調整堆疊位置即可 one gadgets
 
@@ -943,7 +943,7 @@ scanf 特性 %s 只吃 whitespace， \0 似乎不吃，根據前面的經驗， 
 
 先 leak libc base 在第二次執行的時候可以發現 `%13$p` 為 libc 的 _IO_file_setbuf+9
 
-![./img/Untitled%20108.png](./img/Untitled 108.png)
+![./img/Untitled%20108.png](./img/Untitled%20108.png)
 
 ```
 one_gadget libc-2.27.so                                                                                                                                   
@@ -980,7 +980,7 @@ RelRO                         : Full
 
 該題需要修改 magic 的數值，而 payload 最多可以 0x4f，依然編寫工具先列出所有 fmtstr 的東西，並且透過一次 payload 就寫入 magic
 
-![./img/Untitled%20109.png](./img/Untitled 109.png)
+![./img/Untitled%20109.png](./img/Untitled%20109.png)
 
 編寫 `fmt-2_list.py` 列出之後 grep 
 
@@ -1022,7 +1022,7 @@ RelRO                         : Full
 
 沒有 ASLR
 
-![./img/Untitled%20110.png](./img/Untitled 110.png)
+![./img/Untitled%20110.png](./img/Untitled%20110.png)
 
 可以寫入兩次 fmt ，因此第一次可以 print secret ，第二次就可以直接輸入，最大值為 0x20 = 32
 
@@ -1065,7 +1065,7 @@ b'%61$paaacaaadaaaeaaafaaagaaahaaa'
 
 經過分析可以發現 data 為 long 因此 %s ，靠 ( 255/256)^16 的運氣
 
-![./img/Untitled%20111.png](./img/Untitled 111.png)
+![./img/Untitled%20111.png](./img/Untitled%20111.png)
 
 ```
 FLAG{f0rm47_5tring_told_y0u_the_secr3t}
@@ -1095,13 +1095,13 @@ baby_fmt_list.py
 
 靜態分析 main 發現奇怪的指令，發現題目提示 flag on the stack ，透過前面的 baby_fmt_list.py 找到該字串的偏移，找尋   0x6568377b47414c46 ，可以發現在 %6$p 出現 0x6568377b47414c46
 
-![./img/Untitled%20112.png](./img/Untitled 112.png)
+![./img/Untitled%20112.png](./img/Untitled%20112.png)
 
-![./img/Untitled%20113.png](./img/Untitled 113.png)
+![./img/Untitled%20113.png](./img/Untitled%20113.png)
 
 而該位置只有被 rsp 指向，因此可用 %6$p%7$p 等等的方法洩漏，該方法每個位置佔用 4 bytes，而限制是 0x2f = 47 至少可以放 11 個
 
-![./img/Untitled%20114.png](./img/Untitled 114.png)
+![./img/Untitled%20114.png](./img/Untitled%20114.png)
 
 這題看起來寫壞了， local 和 remote 的 flag 相同 `FLAG{7he_f14g_0n_th3_st4ck!!!!!!}`
 
@@ -1109,7 +1109,7 @@ baby_fmt_list.py
 
 保護都全開
 
-![./img/Untitled%20115.png](./img/Untitled 115.png)
+![./img/Untitled%20115.png](./img/Untitled%20115.png)
 
 如果有辦法填滿三個 memo pages, 就可以改變 ulen 的長度，而為了溢出使 ulen 變成 0x35，之後可以透過修改第三個 pages 來達成溢出的效果，一旦溢出後可以蓋寫 canary 的 \0 byte 而洩漏資訊
 
@@ -1119,11 +1119,11 @@ one-gadget 是否可以使用？ 但是 one-gadget 需要洩漏 libc 地址
 
 echo 擁有更大的空間，如果有辦法透過 echo 的位置來保存，並且轉移 esp 到上面
 
-![./img/Untitled%20116.png](./img/Untitled 116.png)
+![./img/Untitled%20116.png](./img/Untitled%20116.png)
 
 又或者 echo 因為 buffer 沒有清空，可以 leak libc 和 rbp ，rbp 是 b'a'*0x20， libc 是 b'a' * 0x48
 
-![./img/Untitled%20117.png](./img/Untitled 117.png)
+![./img/Untitled%20117.png](./img/Untitled%20117.png)
 
 rbp 是 read_chk 的 rbp ，libc 因為版本不一定相同因此還無法確定 offset 沒有附贈 libc ，根據以往解題如果為
 
@@ -1135,9 +1135,9 @@ GLIBC_2.2.5
 
 [https://libc.nullbyte.cat/?q=_rtld_global%3A0&l=libc6_2.23-0ubuntu11.2_amd64](https://libc.nullbyte.cat/?q=_rtld_global%3A0&l=libc6_2.23-0ubuntu11.2_amd64)
 
-![./img/Untitled%20118.png](./img/Untitled 118.png)
+![./img/Untitled%20118.png](./img/Untitled%20118.png)
 
-![./img/Untitled%20119.png](./img/Untitled 119.png)
+![./img/Untitled%20119.png](./img/Untitled%20119.png)
 
 再來盲猜 remote libc 的 base ，因為是 atoi 在這裡的 offset 是 0x36e90 ，假設沒有修改在 0x36e90+16 
 
@@ -1145,7 +1145,7 @@ GLIBC_2.2.5
 
 可以看到遠程像是正常的 base
 
-![./img/Untitled%20120.png](./img/Untitled 120.png)
+![./img/Untitled%20120.png](./img/Untitled%20120.png)
 
 測試了一下 remote 的 libc 是正確的，但是 one gadgets 無法執行，因為還可以塞一個 gadgets ，直接把 rax 設成 0 在 return
 
@@ -1159,7 +1159,7 @@ BreakALLCTF{bHrZz46Z3ufph1PbeYyl}
 
 如果想要蓋 return address 的話 一定會蓋寫到 id ，所以這題需要用 pwntools 讀取之後在送，gets 只在 \n 停止
 
-![./img/Untitled%20121.png](./img/Untitled 121.png)
+![./img/Untitled%20121.png](./img/Untitled%20121.png)
 
 ## level 1 gohome
 
@@ -1173,9 +1173,9 @@ PIE:      No PIE (0x400000)
 
 後門 不解釋
 
-![./img/Untitled%20122.png](./img/Untitled 122.png)
+![./img/Untitled%20122.png](./img/Untitled%20122.png)
 
-![./img/Untitled%20123.png](./img/Untitled 123.png)
+![./img/Untitled%20123.png](./img/Untitled%20123.png)
 
 
 
@@ -1193,7 +1193,7 @@ Do you know the address of his house ?MyFirstCTF{r3tURn_t0_3h3rev3R_U_w4nT_tO_g0
 
 不解釋
 
-![./img/Untitled%20124.png](./img/Untitled 124.png)
+![./img/Untitled%20124.png](./img/Untitled%20124.png)
 
 ```
 echo -n $'AAAABBBBAAAABBBBAAAABBBBAAAA\xef\xbe\xad\xde' | nc 140.110.112.77 6125
@@ -1217,15 +1217,15 @@ RELRO     : Partial
 
 感覺水水的，gets 除了 \n 和結尾以外，其他都不管，也因此只要編碼掉 \n 字元就可以寫 ROP chain，但感覺還是直接 leak libc address 比較方便，因此採用 level 4 Angelboy_Pwn-7 的手法
 
-![./img/Untitled%20125.png](./img/Untitled 125.png)
+![./img/Untitled%20125.png](./img/Untitled%20125.png)
 
-![./img/Untitled%20126.png](./img/Untitled 126.png)
+![./img/Untitled%20126.png](./img/Untitled%20126.png)
 
 ## level 3 張元_Pwn-3
 
 strlen 可以透過 \0 字元繞過，這題感覺用 `ROPgadget --binary rop --ropchain` 產生之後稍微改一改就可以了
 
-![./img/Untitled%20127.png](./img/Untitled 127.png)
+![./img/Untitled%20127.png](./img/Untitled%20127.png)
 
 ## level 4 Angelboy_Pwn-7
 
@@ -1254,11 +1254,11 @@ GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.4) 5.4.0 20160609
 
 注意要透過遠程連上時得到的地址才是正確的，本機看到的只能在本機使用，這時在本機已經可以 get shell ，但是遠程似乎因為地址的問題無法顯示 address，猜測含有 \0  字元，因此稍微偏移之後就可以讀取到 GOT 數值。
 
-![./img/Untitled%20128.png](./img/Untitled 128.png)
+![./img/Untitled%20128.png](./img/Untitled%20128.png)
 
 並且獲取地址相關資訊，可知 puts - 0x24f00 就會是 system, 之後 system + 0x120d5b 就是 bin/sh
 
-![./img/Untitled%20129.png](./img/Untitled 129.png)
+![./img/Untitled%20129.png](./img/Untitled%20129.png)
 
 ```
 AngelboyCTF{bhRXcxAzd3ZrsvVlPpQG}
@@ -1279,7 +1279,7 @@ GCC: (Ubuntu 5.4.0-6ubuntu1~16.04.4) 5.4.0 20160609) 或許可猜 gcc 版本
 
 必須注意 read 大小過大可能可以利用，而 0x20 = 32 ，剛好可以接觸 rbp 和 rip ，而這題應該是 printable shellcode 唯一需要注意的是大小 限制在 0x61 = 97。
 
-![./img/Untitled%20130.png](./img/Untitled 130.png)
+![./img/Untitled%20130.png](./img/Untitled%20130.png)
 
 至於 0x61 的限制，msfvenom 使用 `--smallest` 依然過大，因此先嘗試進行 read
 
@@ -1306,9 +1306,9 @@ echo -n $'1\xc0H\x89\xefj\x08Z\xbe\x01\x01\x01\x01\x81\xf6\x01\x03\x01\x01\x0f\x
 
 嘗試直接利用程式本身的 read 並且觀察可以用的記憶體與暫存器
 
-![./img/Untitled%20131.png](./img/Untitled 131.png)
+![./img/Untitled%20131.png](./img/Untitled%20131.png)
 
-![./img/Untitled%20132.png](./img/Untitled 132.png)
+![./img/Untitled%20132.png](./img/Untitled%20132.png)
 
 由於 read 要從 stdin ，因此 edi 必須為 0 ，可以採用 pop rdi 正好是可見字元，最後需要跳到 read ，因為 read  與 name 距離不遠，有 printable 指令可以使用，但是 call 之類的指令並沒有可用的指令，必須自行編碼
 
@@ -1341,11 +1341,11 @@ RELRO     : Partial
 
 可以看到先讀取之後執行
 
-![./img/Untitled%20133.png](./img/Untitled 133.png)
+![./img/Untitled%20133.png](./img/Untitled%20133.png)
 
 這裡如果先把 edx 設定大一點在跳就可以完成了，可以跳到 0x40063d
 
-![./img/Untitled%20134.png](./img/Untitled 134.png)
+![./img/Untitled%20134.png](./img/Untitled%20134.png)
 
 兩碼做 jmp ，所以剩下 4 碼可以 mov edx, 更大的值，但是實際上是在 data 段進行，所以 jmp 還是不夠可行，發現 r12 的地址指向 _start，因此可以 jmp r12 來多次執行程式碼(3 bytes)，一開始先保存 main 的地址，因為 main addr 在 stack 有值可以使用，該值為 call shell code 之後的 return address 然後可以用 al 暫存器來進行減法
 

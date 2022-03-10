@@ -16,7 +16,7 @@ http://ctf.adl.tw:12003/?skill=php://filter/read=convert.base64-encode/resource=
 
 另外檢視原始碼之後可以看到 upload.html 之後可以找到 upload.php 檔案會被移動到 upload 中
 
-![Untitled%201.png](./img/Untitled 1.png)
+![Untitled%201.png](./img/Untitled%201.png)
 
 一開可以先傳入 phpinfo 檢查看看有哪些不能使用的函數，而序列化的部份可以透過 `pika.php` 做修改即可，這邊上傳一個 web shell ，而檔名會回顯到 cookie
 
@@ -24,7 +24,7 @@ http://ctf.adl.tw:12003/?skill=php://filter/read=convert.base64-encode/resource=
 	curl 'http://ctf.adl.tw:12003/upload.php' -X POST -F 'my_file=@./shell.php' -vv --cookie 'sth='$(php exploit.php) | grep 'Set-Co'
 ```
 
-![Untitled%202.png](./img/Untitled 2.png)
+![Untitled%202.png](./img/Untitled%202.png)
 
 ```
 http://ctf.adl.tw:12003/?skill=upload/7mYgO8rG7j.jpg
@@ -52,7 +52,7 @@ https://portswigger.net/web-security/cross-site-scripting/cheat-sheet
 <audio src="" controlslist="nodownload" controls="" style="-webkit-user-select: none !important; width: 250px; height: var(--inline-controls-bar-height); min-width: 44px !important; min-height: var(--inline-controls-bar-height)  !important; --inline-controls-bar-height:  31px; box-sizing: border-box; margin-top: 0px; margin-bottom: 0px;"></audio>
 ```
 
-![Untitled%203.png](./img/Untitled 3.png)
+![Untitled%203.png](./img/Untitled%203.png)
 
 ```
 /USERSESSID=ADLCTF%7B51mp1e_R3fl3c7!0n_X55_4774ck*-*0N_4dm1n%7D
@@ -70,7 +70,7 @@ ADLCTF{51mp1e_R3fl3c7!0n_X55_4774ck*-*0N_4dm1n}
 
 https://ctf.adl.tw/podkest/src/server.c
 
-![Untitled%204.png](./img/Untitled 4.png)
+![Untitled%204.png](./img/Untitled%204.png)
 
 server 保護全開
 
@@ -86,15 +86,15 @@ PIE:      PIE enabled
 
 printf 沒有找到不安全，但是有 fprintf ，可是難以蓋寫 exit 因為 Full RELRO
 
-![Untitled%205.png](./img/Untitled 5.png)
+![Untitled%205.png](./img/Untitled%205.png)
 
 實際驗證可以看到格式化字串會被輸出
 
-![Untitled%206.png](./img/Untitled 6.png)
+![Untitled%206.png](./img/Untitled%206.png)
 
 由於被結束的是 child process ，因此記憶體依然固定
 
-![Untitled%207.png](./img/Untitled 7.png)
+![Untitled%207.png](./img/Untitled%207.png)
 
 也可輸入大量 `%p`
 
@@ -106,13 +106,13 @@ info %p%p%p%p%p%p%p%p%p%p%p%p%p%p%p%p%p%p
 
 memcpy 是否有可能洩漏格外的資訊？
 
-![Untitled%208.png](./img/Untitled 8.png)
+![Untitled%208.png](./img/Untitled%208.png)
 
 發現 url 溢出的可能
 
-![Untitled%209.png](./img/Untitled 9.png)
+![Untitled%209.png](./img/Untitled%209.png)
 
-![Untitled%2010.png](./img/Untitled 10.png)
+![Untitled%2010.png](./img/Untitled%2010.png)
 
 由於開 nx ，為了找出 canary 使用 fmtstr 找尋
 
@@ -127,11 +127,11 @@ done
 
 我們可以看到 `%20$p` 最像 canary ，連到 remote 之後依然在 20 ，由於子 process 的 canary 相同，可以 leak 該值來 overflow
 
-![Untitled%2011.png](./img/Untitled 11.png)
+![Untitled%2011.png](./img/Untitled%2011.png)
 
 可以看到至少要讓 url 寫入 `0x38 (0x48 - 0x10)` 作為 padding 之後至少還可以寫入 26 個 ROP
 
-![Untitled%2012.png](./img/Untitled 12.png)
+![Untitled%2012.png](./img/Untitled%2012.png)
 
 但是空間不足以寫完整的 ret addr ，可以透過 `%28$p` 洩漏 .text 段，在進行 ret2text ，由於先前已經知道可控 stack 的位置 RBP -0xa0，如果把 stack 往上遷移，可以執行更長的 rop chain，透過先前 leak 計算 rbp  ，之後在 rbp - 0xa8 移動到 name 上
 
@@ -168,7 +168,7 @@ PIE:    No PIE (0x400000)
 
 據說不同 process 的 canary 是不同的？或許這個題目就是來驗證這個部份，而子程式的 canary 會與副程式相同，因此先進行 leak
 
-![Untitled%2013.png](./img/Untitled 13.png)
+![Untitled%2013.png](./img/Untitled%2013.png)
 
 然後一旦成功 leak 之後 透過工具產生 rop chain 即可
 
@@ -178,9 +178,9 @@ ROPgadget --binary ./family --ropchain
 
 而第二次因為跳回 main read 的位置，會對 rbp 進行轉移，但是 rbp 上必須要有 canary 才會正常運行，找尋方法看看能否直接執行 read
 
-![Untitled%2014.png](./img/Untitled 14.png)
+![Untitled%2014.png](./img/Untitled%2014.png)
 
-![Untitled%2015.png](./img/Untitled 15.png)
+![Untitled%2015.png](./img/Untitled%2015.png)
 
 可以看到 read 需要 rdi, rsi, rdx, 而 rdi 要為 stdin = 0, rsi 要為 rsp 來寫入 stack, rdx 越大越好，如果直接 ret2plt 的話，最大為 0x50 ，還可以塞 2 gadgets 
 
@@ -192,7 +192,7 @@ rdx = 任意大數
 
 或者程式也有 push rsp ; ret 可以使用，可用來修復堆疊
 
-![Untitled%2016.png](./img/Untitled 16.png)
+![Untitled%2016.png](./img/Untitled%2016.png)
 
 或考慮跳到其他地方直接呼叫 syscall
 
@@ -214,7 +214,7 @@ PIE:      No PIE (0x400000)
 
 rand 函數不安全
 
-![Untitled%2017.png](./img/Untitled 17.png)
+![Untitled%2017.png](./img/Untitled%2017.png)
 
 透過斷點在 cmp  (0x4008df)，並且檢視 rbp-0x20 的值 % 1000 可以獲得 0x17f = 383
 
@@ -222,11 +222,11 @@ rand 函數不安全
 
 可以透過 debug 發現實際上比較的是 address 而不是 value ，是否有辦法透過 overflow 的方式複寫呢(蓋寫 $rbp-0x10)？
 
-![Untitled%2018.png](./img/Untitled 18.png)
+![Untitled%2018.png](./img/Untitled%2018.png)
 
  後還發現可以透過 welcome 所輸入的內容來控制 rdx，大概是因為變數沒有初始化導致堆疊內容殘留的問題，達成任意地址寫入的問題，回顧前面 RelRO : Partial 代表可以對 got 進行 hijack ，因此將 exit 的 got 覆蓋成 main 執行 shellcode 的位置
 
-![Untitled%2019.png](./img/Untitled 19.png)
+![Untitled%2019.png](./img/Untitled%2019.png)
 
 劫持後
 
@@ -246,23 +246,23 @@ PIE:      No PIE (0x400000)
 
 main 有 gets ( 其實我是透過 xref 找到，理論上題目應該如此)，這題可能要 got hijack，沒有 ASLR 很容易 rop
 
-![Untitled%2020.png](./img/Untitled 20.png)
+![Untitled%2020.png](./img/Untitled%2020.png)
 
 由於是水題因此不需要洩漏 libc，稍微看了一下含有 system ，但是不是 x86 因此無法直接把 sh 放在 stack 上，還是需要一點 rop
 
-![Untitled%2021.png](./img/Untitled 21.png)
+![Untitled%2021.png](./img/Untitled%2021.png)
 
 題目也有給也含有 /bin/sh 的地址
 
-![Untitled%2022.png](./img/Untitled 22.png)
+![Untitled%2022.png](./img/Untitled%2022.png)
 
 結果直接跳到後門就可以了
 
-![Untitled%2023.png](./img/Untitled 23.png)
+![Untitled%2023.png](./img/Untitled%2023.png)
 
 為了避免堆疊異常導致問題，跳到 0x6d7 的位子即可
 
-![Untitled%2024.png](./img/Untitled 24.png)
+![Untitled%2024.png](./img/Untitled%2024.png)
 
 ```
 ADLCTF{M0vAps_13_$Uch_1mp0R74Nt_O^<}
@@ -321,7 +321,7 @@ RelRO                         : Full
 
 可以執行寫入值但是需要解碼
 
-![Untitled%2025.png](./img/Untitled 25.png)
+![Untitled%2025.png](./img/Untitled%2025.png)
 
 由於 arr 只跟 key 有關並且 xor code ，所以兩次就會還原，只需要把這段程式碼寫成另外的工具，或許可以逆向出 code 預設值，但如此需要爆 key，是否有其他利用方法?
 
@@ -347,4 +347,4 @@ asm('pop ebx; ret') = '[\xc3' 結果撞出密碼 0x1213d
 
 而這邊編寫的時候必須確保把 key 都填滿，在解碼的時候本身是使用  0xb 的長度，在 pwntools 傳送 key 需要特別注意
 
-![Untitled%2026.png](./img/Untitled 26.png)
+![Untitled%2026.png](./img/Untitled%2026.png)
