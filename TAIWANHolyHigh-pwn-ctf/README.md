@@ -1026,7 +1026,7 @@ RelRO                         : Full
 
 可以寫入兩次 fmt ，因此第一次可以 print secret ，第二次就可以直接輸入，最大值為 0x20 = 32
 
-編寫 fmt-1_list.py 列出 1-100 個 fmtstr 值 secret 在 bss 段，並且因為沒有 ASLR ，所以地址固定為
+編寫 fmt-1_list.py 列出 1-100 個 fmtstr 值 secret 在 bss section，並且因為沒有 ASLR ，所以地址固定為
 
 0x404050
 
