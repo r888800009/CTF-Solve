@@ -923,7 +923,7 @@ RelRO                         : Partial
 
 ![./img/Untitled%20105.png](./img/Untitled%20105.png)
 
-scanf 特性 %s 只吃 whitespace， \0 似乎不吃，根據前面的經驗， `%6$p` 通常為 buffer 起始 (可能是題目的共通性？)，
+scanf 特性 %s 只吃 whitespace， \0 似乎不吃，根據前面的經驗， `%6$p` 通常為 buffer 起始 (跟 calling convention 有關)，
 
 只讀一次，考慮寫 exit 到 one gadgets  ，由於都是 libc 因此可以考慮只覆蓋少許的 bytes ，若不成功由低到高位 byte 逐漸填滿，而這個可以使用 pwnlib.fmtstr.AtomWrite, pwn.fmtstr.make_payload_dollar 而該方法需要找到傳入的目標 address 所在的 offset
 
