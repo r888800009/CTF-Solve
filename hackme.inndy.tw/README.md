@@ -65,7 +65,7 @@ nc hackme.inndy.tw 7708 > /dev/null 0.01s user 0.00s system 0% cpu 5.074 total
 ## 18 homepage
   `f12`->`console`
 
-## 19 ping (os command injectio)
+## 19 ping (os command injection)
   `$(tail *)`
 
 ## 20 scoreboard
