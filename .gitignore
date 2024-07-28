@@ -5,3 +5,4 @@ peda-session-*.txt
 rop.txt
 a.out
 __pycache__
+.DS_Store
